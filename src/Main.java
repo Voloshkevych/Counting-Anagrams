@@ -7,21 +7,30 @@ import java.util.stream.Stream;
 public class Main {
 
   public static void main(String[] args) {
-    Scanner scanner = new Scanner(System.in);
-    System.out.print("Enter a sentence: ");
+//    Scanner scanner = new Scanner(System.in);
+//    System.out.print("Enter a sentence: ");
+//
+//    //getting user input and converting words to be the same register
+//    String input = scanner.nextLine().toLowerCase();
+//    scanner.close();
+//
+//    System.out.println("Output: " + anagrams);
 
-    //getting user input and converting words to be the same register
-    String input = scanner.nextLine().toLowerCase();
-    scanner.close();
+    String test1 = "aa aa odg dog gdo";
+    String test2 = "a c b c run urn urn";
 
-    //creating array of words splitting them with anything but letters
-    String[] words = input.split("[^a-zA-Z]+");
+    System.out.println("Anagrams in test1: " + countAnagrams(test1));
+    System.out.println("Anagrams in test2: " + countAnagrams(test2));
+  }
 
-    // filter out duplicate words
-    String[] distinctWords = Stream.of(words).distinct().toArray(String[]::new);
+  //method to count anagrams in string
+  public static int countAnagrams(String string) {
+    String[] words = string.split("[^a-z]+");
 
-    //create a map to hold the frequency array of each distinct word and its occurrence count
-    Map<String, Integer> countMap = Stream.of(distinctWords)
+    //filter out duplicate words and create a map to hold the frequency array
+    //of each distinct word and its occurrence count
+    Map<String, Integer> countMap = Stream.of(words)
+        .distinct()
         .map(Main::generateFrequencyArray)
         .collect(Collectors.toMap(
             Arrays::toString,
@@ -29,14 +38,11 @@ public class Main {
             Integer::sum));
 
     //count the number of anagrams, adjusting for the initial count of 1 per set
-    int anagrams = countMap.values().stream()
+    return countMap.values().stream()
         .filter(count -> count > 1)
         .mapToInt(count -> count - 1)
         .sum();
-
-    System.out.println("Output: " + anagrams);
   }
-
 
   //generate a frequency array for each distinct word, counting letter occurrences
   public static int[] generateFrequencyArray(String word) {
